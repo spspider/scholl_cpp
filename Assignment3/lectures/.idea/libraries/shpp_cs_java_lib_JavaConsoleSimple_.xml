@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="shpp-cs-java-lib(JavaConsoleSimple)">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../lesson3/shpp-cs-java-lib(JavaConsoleSimple).jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

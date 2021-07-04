@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class Assignment3Part6 extends WindowProgram implements Runnable {
 
     private static final double OFFSET_STAR = 50;
-    private static final double PAUSE_TIME = 1000/30.0;
+    private static final double PAUSE_TIME = 1000 / 30.0;
     private static final double ALL_SECONDS = 5;
     private static final double MOON_SIZE = 100;
     private static final int STARS_NUMBER = 100;
@@ -31,13 +31,13 @@ public class Assignment3Part6 extends WindowProgram implements Runnable {
 
     public void run() {
 
-        System.out.println("Math:"+Math.cos(0.91));
+        System.out.println("Math:" + Math.cos(0.91));
 
         startMillis = System.currentTimeMillis();
         setBackground(Color.BLACK);
-        System.out.println((System.currentTimeMillis() / 1000));
+        //System.out.println((System.currentTimeMillis() / 1000));
         //System.out.println(TimeUnit.MILLISECONDS.toSeconds(timeMillis););
-        System.out.println((System.currentTimeMillis()));
+        //System.out.println((System.currentTimeMillis()));
         calculateMillisec();
         //**!!!!!!!!!!!!ATTENTION!!!ATTENTION!!!ATTENTION!!!**//
         //this can produce NullPointerException!!!!!!!!!!!!!!!!//
@@ -45,12 +45,11 @@ public class Assignment3Part6 extends WindowProgram implements Runnable {
         ///////////caused by dividing to 0, in some cases///////
         ///////////when computer @things@ that is near to 0/////
         //////////because sometime Double are not ideal/////////
-        createParticles();//<-------------THIS
+        //createParticles();//<-------------THIS
         /////SPECIALLY NOT TAKEN INTO TRY CATCH BRACKETS!!!!!////
         ////////////////////////////////////////////////////////
 
         createStars();
-
         drawMoonVoid();
 
     }
@@ -95,14 +94,14 @@ public class Assignment3Part6 extends WindowProgram implements Runnable {
                 //secondsAnimation - 1000
                 //we need not more than 255
                 //1000/255=3
-                double colorCount = secondsCounter * (secondsAnimation / 255/i*10);//10 - brightness
-                int colorCountCastInt= Math.min((int) colorCount, 255);
+                double colorCount = secondsCounter * (secondsAnimation / 255 / i * 10);//10 - brightness
+                int colorCountCastInt = Math.min((int) colorCount, 255);
                 stars.get(i).setColor(new Color(colorCountCastInt, colorCountCastInt, colorCountCastInt));//new Color(196, 30, 58)
                 //stars.get(i).setLocation(stars.get(i).getX(),stars.get(i).getY()*Math.cos((secondsAnimation-secondsCounter)/10000)+getHeight()/(Math.cos((secondsAnimation-secondsCounter)/10000)*getHeight()));
                 //double backCounterToZero=secondsAnimation-secondsCounter;
                 //double starY =stars.get(i).getY()*Math.cos((getHeight()-secondsCounter*(secondsAnimation/getHeight()))/1000);
                 //double cosMath = Math.cos((getHeight()-secondsCounter*(secondsAnimation/getHeight()))/1000);
-               // double starY =cosMath*generatorY.get(i);
+                // double starY =cosMath*generatorY.get(i);
                 //stars.get(i).setLocation(stars.get(i).getX(),starY);
 
             }
@@ -157,10 +156,10 @@ public class Assignment3Part6 extends WindowProgram implements Runnable {
      * we need to find speed, where km - half of screen
      * hour - ms
      */
-    private void calculateMillisec() {
+    private double calculateMillisec() {
         // first animation will be 1.66 part of all seconds
-        firstAnimationMillisec = PAUSE_TIME;
-        speedOfAnimation = getWidth() / 2.0 / (4 * PAUSE_TIME);//4 - speed of the moon(but really it's seconds, where moon moves)
+        //firstAnimationMillisec = PAUSE_TIME;
+       return getWidth() / 2.0 / (4 * PAUSE_TIME);//4 - speed of the moon(but really it's seconds, where moon moves)
     }
 
     private void drawMoonVoid() {
@@ -170,9 +169,9 @@ public class Assignment3Part6 extends WindowProgram implements Runnable {
         GOval shadowMoon = drawShadowOfMoon(moon);
         add(shadowMoon);
         while (updateCalculateSeconds() >= 0) {
-            moon.move(-speedOfAnimation, 0);
-            shadowMoon.move(-speedOfAnimation, 0);
-            pause(firstAnimationMillisec);
+            moon.move(-calculateMillisec(), 0);
+            shadowMoon.move(-calculateMillisec(), 0);
+            pause(PAUSE_TIME);
         }
     }
 
@@ -234,7 +233,7 @@ public class Assignment3Part6 extends WindowProgram implements Runnable {
                      */
                     //double pause = updateCalculateSeconds()-2000;//that is ms to finish 5000-4500 (500msec)
                     double pause = 2000;//that is ms to finish 5000-4500 (500msec)
-                   // pause = pause < 0 ? 0.000001 : pause;
+                    // pause = pause < 0 ? 0.000001 : pause;
                     /*
                     [---------]
                     [         ]
