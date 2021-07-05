@@ -1,5 +1,6 @@
 package com.shpp.p2p.cs.spaukov.assignment4;
 
+import acm.graphics.GLabel;
 import acm.graphics.GObject;
 import acm.graphics.GOval;
 import acm.graphics.GRect;
@@ -79,6 +80,7 @@ public class Breakout extends WindowProgram {
      */
     GRect paddle;
     GOval ball;
+    double vx, vy;
     /* The amount of time to pause between frames (48fps). */
     private static final double PAUSE_TIME = 1000.0 / 48;
     private static final int BALL_DIAMETER = 2 * BALL_RADIUS;
@@ -90,17 +92,29 @@ public class Breakout extends WindowProgram {
 
              */
         addMouseListeners();
-
         createFirstStep();
         createSecondStep();
         addBallPhysics();
+    }
+
+    private GLabel text;
+
+    private void createglabelfordebug() {
+        if (text == null) {
+            text = new GLabel("text", 10, 10);
+            //text.setLabel("vx:" + vx + " vy" + vy);
+            add(text);
+        }
+        String first = String.format("%.2f", vx);
+        text.setLabel("vx:" + first + " vy" + vy);
     }
 
     private void addBallPhysics() {
         /*
         now add some physics to the ball
          */
-        double vx = randomGenerator(), vy = 3.0;
+        vx = randomGenerator();
+        vy = 3.0;
 
         while (true) {
             //initial speed
@@ -115,44 +129,76 @@ public class Breakout extends WindowProgram {
             //now i need to write a paddle physics:
             //getElementX
 
+
             GObject collidingObject = getCollidingObject(ball);
+            createglabelfordebug();
         }
     }
 
     private GObject getCollidingObject(GOval ball) {
         //take object where ball is:
-
+        boolean collided = false;
         GObject collidingLeftUp = getElementAt(ball.getX(), ball.getY());
-        GObject collidingRightUp = getElementAt(ball.getX() + BALL_DIAMETER, ball.getY());
-        GObject collidingLeftDown = getElementAt(ball.getX(), ball.getY() + BALL_DIAMETER);
-        GObject collidingRightDown = getElementAt(ball.getX() + BALL_DIAMETER, ball.getY() + BALL_RADIUS);
+        GObject collidingRightUp = getElementAt(ball.getX() + BALL_RADIUS, ball.getY());
+        GObject collidingLeftDown = getElementAt(ball.getX(), ball.getY() + BALL_RADIUS);
+        GObject collidingRightDown = getElementAt(ball.getX() + BALL_RADIUS, ball.getY() + BALL_RADIUS);
 
-        GObject colliding=null;
-        if (collidingLeftUp!=null){
-            colliding=collidingLeftUp;
+        GObject colliding = null;
+        colliding = collidingLeftDown;
+
+
+        if ((collidingLeftUp != null)) {
+            if (vx < 0) {//fly left
+
+            }
+            if (vy < 0) {//fly up
+                vy *= -1;
+            }
         }
-        if (collidingRightUp!=null){
-            colliding=collidingRightUp;
+        if ((collidingRightUp != null)) {
+            if (vx < 0) {//fly left
+
+            }
+            if (vy < 0) {//fly up
+                vy *= -1;
+            }
         }
-        if (collidingLeftDown!=null){
-            colliding=collidingLeftDown;
+        if ((collidingLeftDown != null)) {
+            if (vx < 0) {//if vx > 0 - fly right, if vx < 0 fly left
+
+            }
+            if (vy < 0) {//if vy < 0 - fly up, if vy > 0 fly down
+                vy *= -1;
+            }
         }
-        if (collidingRightDown!=null){
-            colliding=collidingRightDown;
-        }
+
+//        if (((collidingLeftUp != null)||(collidingRightUp!=null))||(collidingLeftDown != null)||(collidingRightDown!=null)) {
+//            colliding = collidingLeftUp;
+//            //this is hit in top
+//            //so we need to push ball in reverse direction
+//            //vx =-1
+//            vy*=-1;
+//        }
+//        else if (((collidingLeftUp != null)||(collidingLeftDown!=null))||(collidingRightUp != null)||(collidingRightDown!=null)) {
+//            colliding = collidingLeftUp;
+//            //this is hit in top
+//            //so we need to push ball in reverse direction
+//            //vx =-1
+//            vx*=-1;
+//        }
 
         return colliding;
     }
 
     private double addTopBottomWalls(double vy) {
-        if ((ball.getY() < 0) || (ball.getY() > getHeight())) {
+        if ((ball.getY() < 0) || (ball.getY() > getHeight() - BALL_RADIUS)) {
             vy *= -1;
         }
         return vy;
     }
 
     private double addLeftRightWalls(double vx) {
-        if ((ball.getX() < 0) || (ball.getX() > getWidth() - BALL_DIAMETER)) {//left or right wall
+        if ((ball.getX() < 0) || (ball.getX() > getWidth() - BALL_RADIUS)) {//left or right wall
             //need to change vx
             vx *= -1;
         }

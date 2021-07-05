@@ -43,23 +43,34 @@ public class Assignment3Part2 extends TextProgram {
         }
         if (magicNumber - Math.abs(magicNumber) > 0)
             return;//even this condition are not comply
+        doAnotherMagic(magicNumber);
+    }
+
+    private void doAnotherMagic(double magicNumber) {
         while (magicNumber != 1) {
-            print((int) magicNumber);//print all number and cast to int
-            if (magicNumber % 2 == 0) {//this number can divide on 2
-                // / 2
-                magicNumber = magicNumber / 2.0;//so do it
-                println(" - even, then you need to divide by 2, we get " + (int) magicNumber);//even, then you need to divide by 2, we get
-            } else {
-                // Assignment3Part2* 3 + 1
-                magicNumber = magicNumber * 3.0 + 1; //then do calculations with my instructions
-                println(" - odd, so you need to multiply by 3 and add 1, we get " + (int) magicNumber);//odd, so you need to multiply by 3 and add 1, we get
-            }
-            //do it again
-            //so do it in loop
-            //until what?
-            //until magicNumber != 1
-            //oh my god
+            magicNumber = doSomeWhileInMagic(magicNumber);
         }
         println("End");
     }
+
+    private double doSomeWhileInMagic(double magicNumber) {
+        print((int) magicNumber);//print all number and cast to int
+        if (magicNumber % 2 == 0) {//this number can divide on 2
+            // / 2
+            magicNumber = magicNumber / 2.0;//so do it
+            println(" - even, then you need to divide by 2, we get " + (int) magicNumber);//even, then you need to divide by 2, we get
+        } else {
+            // Assignment3Part2* 3 + 1
+            magicNumber = magicNumber * 3.0 + 1; //then do calculations with my instructions
+            println(" - odd, so you need to multiply by 3 and add 1, we get " + (int) magicNumber);//odd, so you need to multiply by 3 and add 1, we get
+        }
+        //do it again
+        //so do it in loop
+        //until what?
+        //until magicNumber != 1
+        //oh my god
+        return magicNumber;
+    }
+
+
 }
