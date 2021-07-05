@@ -1,5 +1,6 @@
 package com.shpp.p2p.cs.spaukov.assignment4;
 
+import acm.graphics.GObject;
 import acm.graphics.GOval;
 import acm.graphics.GRect;
 import acm.util.RandomGenerator;
@@ -80,6 +81,7 @@ public class Breakout extends WindowProgram {
     GOval ball;
     /* The amount of time to pause between frames (48fps). */
     private static final double PAUSE_TIME = 1000.0 / 48;
+    private static final int BALL_DIAMETER = 2 * BALL_RADIUS;
 
     public void run() {
         /* You fill this in, along with any subsidiary methods */
@@ -105,25 +107,54 @@ public class Breakout extends WindowProgram {
             //what is direction?
             //speed is: private double vx, vy;
 
-            ball.move(vx,vy);
+            ball.move(vx, vy);
             pause(PAUSE_TIME);
             //ok. it's works, let's try to add walls
             vx = addLeftRightWalls(vx);
             vy = addTopBottomWalls(vy);
+            //now i need to write a paddle physics:
+            //getElementX
+
+            GObject collidingObject = getCollidingObject(ball);
         }
     }
 
+    private GObject getCollidingObject(GOval ball) {
+        //take object where ball is:
+
+        GObject collidingLeftUp = getElementAt(ball.getX(), ball.getY());
+        GObject collidingRightUp = getElementAt(ball.getX() + BALL_DIAMETER, ball.getY());
+        GObject collidingLeftDown = getElementAt(ball.getX(), ball.getY() + BALL_DIAMETER);
+        GObject collidingRightDown = getElementAt(ball.getX() + BALL_DIAMETER, ball.getY() + BALL_RADIUS);
+
+        GObject colliding=null;
+        if (collidingLeftUp!=null){
+            colliding=collidingLeftUp;
+        }
+        if (collidingRightUp!=null){
+            colliding=collidingRightUp;
+        }
+        if (collidingLeftDown!=null){
+            colliding=collidingLeftDown;
+        }
+        if (collidingRightDown!=null){
+            colliding=collidingRightDown;
+        }
+
+        return colliding;
+    }
+
     private double addTopBottomWalls(double vy) {
-        if ((ball.getY()<0)||(ball.getY()>getHeight())){
-            vy*=-1;
+        if ((ball.getY() < 0) || (ball.getY() > getHeight())) {
+            vy *= -1;
         }
         return vy;
     }
 
     private double addLeftRightWalls(double vx) {
-        if ((ball.getX()<0)||(ball.getX()>getWidth()-BALL_RADIUS)){//left or right wall
+        if ((ball.getX() < 0) || (ball.getX() > getWidth() - BALL_DIAMETER)) {//left or right wall
             //need to change vx
-            vx*=-1;
+            vx *= -1;
         }
         return vx;
     }
@@ -141,7 +172,7 @@ public class Breakout extends WindowProgram {
 
     private void createSecondStep() {
         //create ball
-        ball = new GOval(getWidth() / 2.0 - BALL_RADIUS / 2.0, getHeight() / 2.0 - BALL_RADIUS / 2.0, BALL_RADIUS, BALL_RADIUS);
+        ball = new GOval(getWidth() / 2.0 - BALL_DIAMETER / 2.0, getHeight() / 2.0 - BALL_DIAMETER / 2.0, BALL_RADIUS, BALL_RADIUS);
         ball.setFilled(true);
         ball.setFillColor(Color.BLACK);
         add(ball);

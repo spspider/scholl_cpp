@@ -15,15 +15,22 @@ import java.awt.*;
 public class Assignment3Part4 extends WindowProgram {
 
     private static final double BRICK_WIDTH = 50;
-    private static final double BRICK_HEIGHT = 50;
+    private static final double BRICK_HEIGHT = 20;
+    private static final int BRICKS_IN_BASE=10;
 
-    int numberBricks = 0;
+    private static final boolean CALCULATE_BRICKS_BY_WINDOW=false;
+    int numberBricks = 0;//global variable
 
     /**
      * calculate number of bricks, and make overall width less then one
      */
     public void run() {
-        numberBricks = (int) (getWidth() / BRICK_WIDTH - 1);
+        if (CALCULATE_BRICKS_BY_WINDOW) {//if this is true number of briks will be calculated by width of the window
+            numberBricks = (int) (getWidth() / BRICK_WIDTH - 1);
+        }
+        else{
+            numberBricks=BRICKS_IN_BASE;
+        }
         drawPyramid();
 
     }

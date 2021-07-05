@@ -5,8 +5,8 @@ import com.shpp.cs.a.console.TextProgram;
 
 /**
  * TODO:Douglas Hofstadter's book "Gödel, Escher, Bach" (Pulitzer Prize-winning) mentions
- *      various interesting tasks that can, to some extent, be viewed through the lens of programming.
- *      Here is one of them:
+ * various interesting tasks that can, to some extent, be viewed through the lens of programming.
+ * Here is one of them:
  */
 
 public class Assignment3Part3 extends TextProgram {
@@ -14,16 +14,16 @@ public class Assignment3Part3 extends TextProgram {
     public void run() {
         double a = 10;//for debug purposes
         int b = 0;//for debug purposes
-        println(raiseToPower(readInt("Enter base "), readInt("Enter exponent ")));
+        println(raiseToPower(readDouble("Enter base "), readInt("Enter exponent ")));
         //println(raiseToPower(a, b));
-        //this is only for testing purpose, you can uncomment this for check
-        //println("right:" + Math.pow(a, b));
+
 
     }
 
     /**
      * this is predefined void with may return right answer
-     * @param base first, example 2
+     *
+     * @param base     first, example 2
      * @param exponent in > how much
      * @return answer
      */
@@ -38,9 +38,10 @@ public class Assignment3Part3 extends TextProgram {
             exponent *= -1;
             minus = true;
         }
-        if (exponent == 0) {//exclude from calculation
-            base = 1;
+        if (base == 0) {
+            return 0;
         }
+        base = exponent == 0 ? 1 : base;//exclude from calculation
         for (int i = 1; i < exponent; i++) {
             base *= base1;//multiply base
         }

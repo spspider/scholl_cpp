@@ -38,7 +38,7 @@ public class Assignment3Part6 extends WindowProgram implements Runnable {
         //System.out.println((System.currentTimeMillis() / 1000));
         //System.out.println(TimeUnit.MILLISECONDS.toSeconds(timeMillis););
         //System.out.println((System.currentTimeMillis()));
-        calculateMillisec();
+        //calculateMillisec();
         //**!!!!!!!!!!!!ATTENTION!!!ATTENTION!!!ATTENTION!!!**//
         //this can produce NullPointerException!!!!!!!!!!!!!!!!//
         ////////////////this is known problem///////////////////
@@ -124,8 +124,10 @@ public class Assignment3Part6 extends WindowProgram implements Runnable {
             textSeconds.setFont("Verdana-50");
             add(textSeconds);
         }
-        if (seconds < (ALL_SECONDS * 1000) + 1) {
-            textSeconds.setLabel(String.valueOf((int) ALL_SECONDS * 1000 - seconds));
+        if (seconds <= (ALL_SECONDS * 1000) + 1) {
+            double timeLeft = (( ALL_SECONDS * 1000 - seconds)/1000);
+            String label =String.format("%.2f",timeLeft);
+            textSeconds.setLabel(label);
         }
         return finishMillis;
     }
