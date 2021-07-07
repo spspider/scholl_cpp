@@ -105,8 +105,9 @@ public class Breakout extends WindowProgram {
             //text.setLabel("vx:" + vx + " vy" + vy);
             add(text);
         }
+        //String first = String.format("%.2f", vx);
         String first = String.format("%.2f", vx);
-        text.setLabel("vx:" + first + " vy" + vy);
+        text.setLabel("vx:" + dxMouse + " vy" + vy);
     }
 
     private void addBallPhysics() {
@@ -146,48 +147,83 @@ public class Breakout extends WindowProgram {
         GObject colliding = null;
         colliding = collidingLeftDown;
 
-
-        if ((collidingLeftUp != null)) {
-            if (vx < 0) {//fly left
-
-            }
-            if (vy < 0) {//fly up
+        if (collidingLeftDown != null || collidingRightDown != null || collidingLeftUp != null || collidingRightUp != null) {
+            if ((collidingLeftDown != null) && (collidingRightDown != null)) {//collided down
+                //ignore vx
                 vy *= -1;
-            }
-        }
-        if ((collidingRightUp != null)) {
-            if (vx < 0) {//fly left
-
-            }
-            if (vy < 0) {//fly up
+            } else if ((collidingLeftUp != null) && (collidingRightUp != null)) {//collided up
+                //ignore vx
                 vy *= -1;
+            } else if ((collidingLeftDown != null) && (collidingLeftUp != null)) {//collided left
+                //ignore vy
+                vx *= -1;
+            } else if ((collidingRightDown != null) && (collidingRightUp != null)) {//collided right
+                //ignore vy
+                vx *= -1;
+
+                //now we add logic for corners
+            } else if ((collidingLeftUp != null) && (collidingRightDown == null)) {//colliding leftUp corner
+                leftUpLogic(collidingLeftUp);
+            } else if ((collidingRightDown != null) && (collidingLeftUp == null)) {//colliding leftDown corner
+                rigtDownLogic(collidingRightDown);
+            } else if ((collidingRightUp != null) && (collidingLeftDown == null)) {//colliding leftUp corner
+                rightUpLogic(collidingRightUp);
+            } else if ((collidingLeftDown != null) && (collidingRightUp == null)) {//colliding leftDown corner
+                leftDownLogic(collidingLeftDown);
             }
+            //vx*=-dxMouse/10;
+            vx*=-2.5;
         }
-        if ((collidingLeftDown != null)) {
+
+        return colliding;
+    }
+
+    private void leftUpLogic(GObject collidingLeftUp) {
+        if ((collidingLeftUp != null)) {//Left Up ->
             if (vx < 0) {//if vx > 0 - fly right, if vx < 0 fly left
-
+                vx *= -1;
             }
             if (vy < 0) {//if vy < 0 - fly up, if vy > 0 fly down
                 vy *= -1;
             }
         }
+    }
 
-//        if (((collidingLeftUp != null)||(collidingRightUp!=null))||(collidingLeftDown != null)||(collidingRightDown!=null)) {
-//            colliding = collidingLeftUp;
-//            //this is hit in top
-//            //so we need to push ball in reverse direction
-//            //vx =-1
-//            vy*=-1;
-//        }
-//        else if (((collidingLeftUp != null)||(collidingLeftDown!=null))||(collidingRightUp != null)||(collidingRightDown!=null)) {
-//            colliding = collidingLeftUp;
-//            //this is hit in top
-//            //so we need to push ball in reverse direction
-//            //vx =-1
-//            vx*=-1;
-//        }
+    private void rightUpLogic(GObject collidingRightUp) {
+        if ((collidingRightUp != null)) {
+            if (vx > 0) {//if vx > 0 - fly right, if vx < 0 fly left
+                vx *= -1;
+            }
+            if (vy < 0) {//if vy < 0 - fly up, if vy > 0 fly down
+                vy *= -1;
+            }
+        }
+    }
 
-        return colliding;
+    private void rigtDownLogic(GObject collidingRightDown) {
+        if ((collidingRightDown != null)) {
+            //it flying to down
+            //so vy > 0
+            if (vx > 0) {//if vx > 0 - fly right, if vx < 0 fly left
+                vx *= -1;
+            }
+            if (vy > 0) {//if vy < 0 - fly up, if vy > 0 fly down
+                vy *= -1;
+            }
+
+        }
+    }
+
+    private void leftDownLogic(GObject collidingLeftDown) {
+        if ((collidingLeftDown != null)) {
+            if (vx < 0) {//if vx > 0 - fly right, if vx < 0 fly left
+                vx *= -1;
+                vx *= -dxMouse;
+            }
+            if (vy > 0) {//if vy < 0 - fly up, if vy > 0 fly down
+                vy *= -1;
+            }
+        }
     }
 
     private double addTopBottomWalls(double vy) {
@@ -238,6 +274,15 @@ public class Breakout extends WindowProgram {
     }
 
     @Override
+    public void mouseExited(MouseEvent mouseEvent) {
+        dxMouse = 0;
+    }
+
+
+    double prevMouseX = 0;
+    double dxMouse = 0;
+
+    @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         //it will not work if i just crete override method
         //i need this object to be an a global
@@ -245,11 +290,14 @@ public class Breakout extends WindowProgram {
         //paddle.setLocation(mouseEvent.getX()-PADDLE_WIDTH/2.0,paddle.getY());
         //paddle goes outside of screen
         //to prevent it try to write something like exeption
+        dxMouse = prevMouseX - mouseEvent.getX();
+        System.out.println(dxMouse);
         double paddleLocation = mouseEvent.getX() - PADDLE_WIDTH / 2.0;
 
         paddleLocation = paddleLocation < 0 ? 0 : paddleLocation;//left side block
         paddleLocation = paddleLocation > getWidth() - PADDLE_WIDTH ? getWidth() - PADDLE_WIDTH : paddleLocation;//right side block
         paddle.setLocation(paddleLocation, paddle.getY());
+        prevMouseX = mouseEvent.getX();
         //super.mouseMoved(mouseEvent);
     }
 
