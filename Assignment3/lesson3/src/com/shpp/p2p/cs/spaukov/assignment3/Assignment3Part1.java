@@ -34,7 +34,6 @@ public class Assignment3Part1 extends TextProgram {
         int[] inputs = new int[DAYS_TO_CALCULATE];
         for (int i = 0; i < DAYS_TO_CALCULATE; i++) {
             inputs[i] = readInt("How many minutes did you do on day " + (i + 1));
-
         }
         /*
         use this inputs for check
