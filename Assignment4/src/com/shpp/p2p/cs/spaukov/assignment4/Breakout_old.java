@@ -94,66 +94,7 @@ public class Breakout extends WindowProgram {
         addMouseListeners();
         createFirstStep();
         createSecondStep();
-        drawBlocks();
         addBallPhysics();
-
-    }
-
-    private void drawBlocks() {
-        for (int i = 0; i < NBRICK_ROWS; i++) {
-            for (int j = 0; j < NBRICKS_PER_ROW; j++) {
-                GRect box = createBox(i, j); //where i - rows, j - columns
-                add(box);
-            }
-        }
-    }
-
-    /**
-     * make another method because roman sad it's needed
-     *
-     * @param i -  rows
-     * @param j - columns
-     * @return Grect box
-     */
-    private GRect createBox(int i, int j) {
-        GRect box = new GRect(xFirstPosition(i), yFirstPosition(j), BRICK_WIDTH, BRICK_HEIGHT);
-        box.setFilled(true);
-        box.setFillColor(determineColorByRow(j));
-        return box;
-    }
-
-    private Color determineColorByRow(int j) {
-        return switch (j) {
-            case 0, 1 -> Color.RED;
-            case 2, 3 -> Color.ORANGE;
-            case 4, 5 -> Color.YELLOW;
-            case 6, 7 -> Color.GREEN;
-            case 8, 9 -> Color.CYAN;
-            default -> Color.BLACK;
-        };
-    }
-
-    private double yFirstPosition(int j) {
-        /**
-         * to calculate center of all boxes i use screen and take half of it
-         * then multiply int from cycle and add box size with spacing
-         */
-        double yFirstPosition_offset = BRICK_Y_OFFSET;
-        return yFirstPosition_offset + j * (BRICK_HEIGHT + BRICK_SEP);
-    }
-
-    private double xFirstPosition(int i) {
-        double xFirstPosition_offset = determineCenterOfScreenX();
-        return xFirstPosition_offset + i * (BRICK_WIDTH + BRICK_SEP);
-    }
-
-    private double determineCenterOfScreenX() {
-        /**
-         * same as did before but in vertical dimension
-         */
-        double CenterScreen = getWidth() / 2.0;
-        double CenterOfBoxes = ((BRICK_WIDTH + BRICK_SEP) * NBRICKS_PER_ROW - BRICK_SEP) / 2.0;
-        return CenterScreen - CenterOfBoxes;
     }
 
     private GLabel text;
@@ -164,21 +105,10 @@ public class Breakout extends WindowProgram {
             //text.setLabel("vx:" + vx + " vy" + vy);
             add(text);
         }
+        //String first = String.format("%.2f", vx);
         String first = String.format("%.2f", vx);
-        text.setLabel("vx:" + first + " vy" + vy);
+        text.setLabel("vx:" + dxMouse + " vy" + vy);
     }
-
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {
-        mouseEvent.getButton();
-        if (!programRun) {
-            programRun = true;
-
-        }
-        System.out.println("clicked");
-    }
-
-    boolean programRun = true;
 
     private void addBallPhysics() {
         /*
@@ -187,7 +117,7 @@ public class Breakout extends WindowProgram {
         vx = randomGenerator();
         vy = 3.0;
 
-        while (programRun) {
+        while (true) {
             //initial speed
             //what is direction?
             //speed is: private double vx, vy;
@@ -202,20 +132,8 @@ public class Breakout extends WindowProgram {
 
 
             GObject collidingObject = getCollidingObject(ball);
-            if (collidingObject != null) {
-                if (collidingObject == paddle) {
-
-                } else {
-                    remove(collidingObject);
-                }
-            }
             createglabelfordebug();
         }
-    }
-
-    @Override
-    public void waitForClick() {
-        super.waitForClick();
     }
 
     private GObject getCollidingObject(GOval ball) {
@@ -227,55 +145,85 @@ public class Breakout extends WindowProgram {
         GObject collidingRightDown = getElementAt(ball.getX() + BALL_RADIUS, ball.getY() + BALL_RADIUS);
 
         GObject colliding = null;
-        //colliding = collidingLeftDown;
+        colliding = collidingLeftDown;
 
-
-        if ((collidingLeftUp != null)) {
-            if (vx < 0) {//fly left
-
-            }
-            if (vy < 0) {//fly up
+        if (collidingLeftDown != null || collidingRightDown != null || collidingLeftUp != null || collidingRightUp != null) {
+            if ((collidingLeftDown != null) && (collidingRightDown != null)) {//collided down
+                //ignore vx
                 vy *= -1;
-            }
-        }
-        if ((collidingRightUp != null)) {
-            if (vx < 0) {//fly left
-
-            }
-            if (vy < 0) {//fly up
+            } else if ((collidingLeftUp != null) && (collidingRightUp != null)) {//collided up
+                //ignore vx
                 vy *= -1;
+            } else if ((collidingLeftDown != null) && (collidingLeftUp != null)) {//collided left
+                //ignore vy
+                vx *= -1;
+            } else if ((collidingRightDown != null) && (collidingRightUp != null)) {//collided right
+                //ignore vy
+                vx *= -1;
+
+                //now we add logic for corners
+            } else if ((collidingLeftUp != null) && (collidingRightDown == null)) {//colliding leftUp corner
+                leftUpLogic(collidingLeftUp);
+            } else if ((collidingRightDown != null) && (collidingLeftUp == null)) {//colliding leftDown corner
+                rigtDownLogic(collidingRightDown);
+            } else if ((collidingRightUp != null) && (collidingLeftDown == null)) {//colliding leftUp corner
+                rightUpLogic(collidingRightUp);
+            } else if ((collidingLeftDown != null) && (collidingRightUp == null)) {//colliding leftDown corner
+                leftDownLogic(collidingLeftDown);
             }
+            //vx*=-dxMouse/10;
+            vx*=-2.5;
         }
-        if ((collidingLeftDown != null)) {
+
+        return colliding;
+    }
+
+    private void leftUpLogic(GObject collidingLeftUp) {
+        if ((collidingLeftUp != null)) {//Left Up ->
             if (vx < 0) {//if vx > 0 - fly right, if vx < 0 fly left
-
+                vx *= -1;
             }
             if (vy < 0) {//if vy < 0 - fly up, if vy > 0 fly down
                 vy *= -1;
             }
         }
+    }
 
-//        if (((collidingLeftUp != null)||(collidingRightUp!=null))||(collidingLeftDown != null)||(collidingRightDown!=null)) {
-//            colliding = collidingLeftUp;
-//            //this is hit in top
-//            //so we need to push ball in reverse direction
-//            //vx =-1
-//            vy*=-1;
-//        }
-//        else if (((collidingLeftUp != null)||(collidingLeftDown!=null))||(collidingRightUp != null)||(collidingRightDown!=null)) {
-//            colliding = collidingLeftUp;
-//            //this is hit in top
-//            //so we need to push ball in reverse direction
-//            //vx =-1
-//            vx*=-1;
-//        }
+    private void rightUpLogic(GObject collidingRightUp) {
+        if ((collidingRightUp != null)) {
+            if (vx > 0) {//if vx > 0 - fly right, if vx < 0 fly left
+                vx *= -1;
+            }
+            if (vy < 0) {//if vy < 0 - fly up, if vy > 0 fly down
+                vy *= -1;
+            }
+        }
+    }
 
-        colliding = collidingLeftDown != null ? collidingLeftDown : colliding;
-        colliding = collidingRightDown != null ? collidingRightDown : colliding;
-        colliding = collidingLeftUp != null ? collidingLeftUp : colliding;
-        colliding = collidingRightUp != null ? collidingRightUp : colliding;
+    private void rigtDownLogic(GObject collidingRightDown) {
+        if ((collidingRightDown != null)) {
+            //it flying to down
+            //so vy > 0
+            if (vx > 0) {//if vx > 0 - fly right, if vx < 0 fly left
+                vx *= -1;
+            }
+            if (vy > 0) {//if vy < 0 - fly up, if vy > 0 fly down
+                vy *= -1;
+            }
 
-        return colliding;
+        }
+    }
+
+    private void leftDownLogic(GObject collidingLeftDown) {
+        if ((collidingLeftDown != null)) {
+            if (vx < 0) {//if vx > 0 - fly right, if vx < 0 fly left
+                vx *= -1;
+                vx *= -dxMouse;
+            }
+            if (vy > 0) {//if vy < 0 - fly up, if vy > 0 fly down
+                vy *= -1;
+            }
+        }
     }
 
     private double addTopBottomWalls(double vy) {
@@ -319,6 +267,20 @@ public class Breakout extends WindowProgram {
         //i think i need to create on MouseMove() event
     }
 
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+        //super.mouseClicked(mouseEvent);
+        System.out.println(mouseEvent.getX());
+    }
+
+    @Override
+    public void mouseExited(MouseEvent mouseEvent) {
+        dxMouse = 0;
+    }
+
+
+    double prevMouseX = 0;
+    double dxMouse = 0;
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
@@ -328,11 +290,14 @@ public class Breakout extends WindowProgram {
         //paddle.setLocation(mouseEvent.getX()-PADDLE_WIDTH/2.0,paddle.getY());
         //paddle goes outside of screen
         //to prevent it try to write something like exeption
+        dxMouse = prevMouseX - mouseEvent.getX();
+        System.out.println(dxMouse);
         double paddleLocation = mouseEvent.getX() - PADDLE_WIDTH / 2.0;
 
         paddleLocation = paddleLocation < 0 ? 0 : paddleLocation;//left side block
         paddleLocation = paddleLocation > getWidth() - PADDLE_WIDTH ? getWidth() - PADDLE_WIDTH : paddleLocation;//right side block
         paddle.setLocation(paddleLocation, paddle.getY());
+        prevMouseX = mouseEvent.getX();
         //super.mouseMoved(mouseEvent);
     }
 
