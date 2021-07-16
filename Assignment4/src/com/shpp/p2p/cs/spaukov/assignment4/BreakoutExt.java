@@ -1,16 +1,5 @@
 package com.shpp.p2p.cs.spaukov.assignment4;
 
-/**
- * TODO: game "Breakout" in Java.
- *       You have the opportunity to combine all the skills you gained in the last 2 tasks with event handling - and make an impressive program.
- *       Game Breakout
- *       The initial configuration of the Breakout world is shown in the figure.
- *       Colored rectangles at the top of the screen - bricks, black rectangle at the bottom - a racket.
- *       The racket is fixed on the vertical axis, but can move freely horizontally, back and forth on the screen following
- *       the mouse pointer until it reaches the edge of the screen.
- */
-
-
 import acm.graphics.GLabel;
 import acm.graphics.GObject;
 import acm.graphics.GOval;
@@ -22,7 +11,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class Breakout extends WindowProgram {
+public class BreakoutExt extends WindowProgram {
     /**
      * Width and height of application window in pixels
      */
@@ -88,7 +77,7 @@ public class Breakout extends WindowProgram {
     private static final int NTURNS = 3;
 
     /**
-     * in this program i didn't use any external libraries or additional functionality
+     *
      */
     GRect paddle;
     GOval ball;
@@ -100,31 +89,38 @@ public class Breakout extends WindowProgram {
     double prevMouseX = 0;
     double dxMouse = 0;
 
+
+    /**
+    in this game i add Delta corners,
+     so if you want to use some physics, play this game!
+     */
     public void run() {
         /* You fill this in, along with any subsidiary methods */
             /*lets start.
             firstly i need to create my rocket)
 
              */
+
+
         addMouseListeners();
         runGame();
 
     }
 
     private void runGame() {
-        createFirstStep();//step desccribed in our lessons (draw Racket)
+        createFirstStep();
 
-        GObject click = showMessage("PLEASE CLICK TO START, LIFE:" +nTurns);
+        GObject click = showMessage("PLEASE CLICK TO START, TURNS:" +nTurns);
         waitForClick();//wait for click
-        remove(click);//remove label
-        createSecondStep();//draw ball
+        remove(click);//remove this label
+        createSecondStep();//create ball
         drawBlocks();//draw blocks
         addBallPhysics();//add while
     }
 
     /**
-     * blocks taken from Assignment 2
-     * there are actually identical
+     *
+     * try to draw blocks right in a Assignemnt 2
      */
     private void drawBlocks() {
         for (int i = 0; i < NBRICK_ROWS; i++) {
@@ -159,35 +155,36 @@ public class Breakout extends WindowProgram {
             default -> Color.BLACK;
         };
     }
-    /**
-     * to calculate center of all boxes i use screen and take half of it
-     * then multiply int from cycle and add box size with spacing
-     */
+
     private double yFirstPosition(int j) {
-
-
-        return BRICK_Y_OFFSET + j * (BRICK_HEIGHT + BRICK_SEP);
+        /**
+         * to calculate center of all boxes i use screen and take half of it
+         * then multiply int from cycle and add box size with spacing
+         */
+        double yFirstPosition_offset = BRICK_Y_OFFSET;
+        return yFirstPosition_offset + j * (BRICK_HEIGHT + BRICK_SEP);
     }
 
     private double xFirstPosition(int i) {
         double xFirstPosition_offset = determineCenterOfScreenX();
         return xFirstPosition_offset + i * (BRICK_WIDTH + BRICK_SEP);
     }
-    /**
-     * same as did before but in vertical dimension
-     */
-    private double determineCenterOfScreenX() {
 
+    private double determineCenterOfScreenX() {
+        /**
+         * same as did before but in vertical dimension
+         */
         double CenterScreen = getWidth() / 2.0;
         double CenterOfBoxes = ((BRICK_WIDTH + BRICK_SEP) * NBRICKS_PER_ROW - BRICK_SEP) / 2.0;
         return CenterScreen - CenterOfBoxes;
     }
 
-
+    private GLabel text;
 
 
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
+        mouseEvent.getButton();
         if (!programRun) {
             programRun = true;
 
@@ -195,7 +192,9 @@ public class Breakout extends WindowProgram {
 
     }
 
-    boolean programRun = false;
+
+
+    boolean programRun = true;
     int bricksCount = NBRICK_ROWS * NBRICKS_PER_ROW;
 
     private void addBallPhysics() {
@@ -209,7 +208,6 @@ public class Breakout extends WindowProgram {
             //initial speed
             //what is direction?
             //speed is: private double vx, vy;
-
 
             ball.move(vx, vy);
             pause(PAUSE_TIME);
@@ -225,7 +223,6 @@ public class Breakout extends WindowProgram {
                 if (collidingObject != paddle) {
                     remove(collidingObject);
                     bricksCount--;
-                    vy+=0.1;//add some value gravity
                     if (bricksCount <= 0) {
                         programRun = false;
                         removeAll();
@@ -233,6 +230,7 @@ public class Breakout extends WindowProgram {
                     }
                 }
             }
+            createglabelfordebug();
         }
     }
 
@@ -242,15 +240,9 @@ public class Breakout extends WindowProgram {
         super.waitForClick();
     }
 
-    /**
-     * in this method i calculate all corners of ball and then check it if it has
-     * a object
-     * then i put bal in direction -1 to the previous
-     * @param ball - ball in the game
-     * @return collided object
-     */
     private GObject getCollidingObject(GOval ball) {
         //take object where ball is:
+        boolean collided = false;
         GObject collidingLeftUp = getElementAt(ball.getX(), ball.getY());
         GObject collidingRightUp = getElementAt(ball.getX() + BALL_DIAMETER, ball.getY());
         GObject collidingLeftDown = getElementAt(ball.getX(), ball.getY() + BALL_DIAMETER);
@@ -291,10 +283,6 @@ public class Breakout extends WindowProgram {
         colliding = collidingLeftUp != null ? collidingLeftUp : colliding;
         colliding = collidingRightUp != null ? collidingRightUp : colliding;
 
-
-        /*
-        this list needed for checking "stik" ball to paddle
-         */
         ArrayList<GObject> CollidedArray = new ArrayList<>();
         if (collidingLeftDown != null) {
             CollidedArray.add(collidingLeftDown);
@@ -309,12 +297,8 @@ public class Breakout extends WindowProgram {
             CollidedArray.add(collidingRightUp);
         }
         if (CollidedArray.size() > 2) {
-            /*
-            ATTENTION! this specially throw ball in center,
-            of course you say it better to move on a paddle,
-            but in my game this is special option
-             */
-            ball.setLocation(getWidth() / 2.0, getHeight() / 2.0);//throw ball away from paddle
+            ball.setLocation(getWidth() / 2.0, getHeight() / 2.0);
+            //vy=getHeight()/2.0;
         }
 
         return colliding;
@@ -324,10 +308,11 @@ public class Breakout extends WindowProgram {
         if ((collidingLeftUp != null)) {//Left Up ->
 
             if (vx < 0) {//if vx > 0 - fly right, if vx < 0 fly left
-                vx *= -1 * getRandom();
+                //vx *= -1 * getRandom();
+               calculateDelta(collidingLeftUp,-1,-1,3);
             }
             if (vy < 0) {//if vy < 0 - fly up, if vy > 0 fly down
-                vy *= -1;
+                calculateDelta(collidingLeftUp,-1,-1,3);
             }
         }
     }
@@ -335,10 +320,10 @@ public class Breakout extends WindowProgram {
     private void rightUpLogic(GObject collidingRightUp) {
         if ((collidingRightUp != null)) {
             if (vx > 0) {//if vx > 0 - fly right, if vx < 0 fly left
-                vx *= -1 * getRandom();
+                 calculateDelta(collidingRightUp,-1,-1,2);
             }
             if (vy < 0) {//if vy < 0 - fly up, if vy > 0 fly down
-                vy *= -1;
+                calculateDelta(collidingRightUp,-1,-1,2);
             }
         }
     }
@@ -348,40 +333,73 @@ public class Breakout extends WindowProgram {
             //it flying to down
             //so vy > 0
             if (vx > 0) {//if vx > 0 - fly right, if vx < 0 fly left
-                vx *= -1 * getRandom();
+               calculateDelta(collidingRightDown,-1,-1,1);
             }
             if (vy > 0) {//if vy < 0 - fly up, if vy > 0 fly down
-                vy *= -1;
+                calculateDelta(collidingRightDown,-1,-1,1);
             }
 
         }
-    }
-
-    private double getRandom() {
-        return RandomGenerator.getInstance().nextDouble(0.5, 1.5);
     }
 
     private void leftDownLogic(GObject collidingLeftDown) {
         if ((collidingLeftDown != null)) {
             if (vx < 0) {//if vx > 0 - fly right, if vx < 0 fly left
-                vx *= -1 * getRandom();
+                calculateDelta(collidingLeftDown,-1,-1,0);
                 //vx *= -dxMouse;
             }
             if (vy > 0) {//if vy < 0 - fly up, if vy > 0 fly down
-                vy *= -1;
+                calculateDelta(collidingLeftDown,-1,-1,0);
             }
         }
     }
 
 
-//Number of turns!
+    private void calculateDelta(GObject collidingObject, int whereXGo, int whereYGo, int i) {
+        double deltaX = 0;
+        double deltaY = 0;
+        switch (i) {
+            case 0 -> {//leftDown
+                deltaX = collidingObject.getX() + collidingObject.getWidth() - ball.getX();
+                deltaY = collidingObject.getY() - ball.getY() - BALL_DIAMETER;
+            }
+            case 1 -> {//rightDown
+                deltaX = collidingObject.getX() - ball.getX() - BALL_DIAMETER;
+                deltaY = collidingObject.getY() - ball.getY() - BALL_DIAMETER;
+            }
+            case 2 -> {//leftUp
+                deltaX = collidingObject.getX() + collidingObject.getWidth() / 2.0 - ball.getX() + BALL_RADIUS + BALL_DIAMETER;
+                deltaY = ball.getY() - BALL_DIAMETER - paddle.getY() + paddle.getHeight();
+            }
+            case 3 -> {//right up
+                deltaX = collidingObject.getX() - ball.getX() - BALL_DIAMETER;
+                deltaY = ball.getY() - BALL_DIAMETER - paddle.getY() + paddle.getHeight();
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + i);
+        }
+
+        if ((deltaX > 10) || (deltaX <= 0)) {
+            deltaX = 1;
+            double percentage = deltaX * 100 / 10.0;//50%
+            double increasedByX = (Math.abs(vx) + Math.abs(vy)) * percentage / 100;
+            double increaseByY = (Math.abs(vx) + Math.abs(vy)) - increasedByX;
+
+            vx = increasedByX;
+            vy = -increaseByY;
+        } else if ((deltaY >= 0) || (deltaY <= -10)) {
+            deltaY = 1;
+            double percentage = deltaY * 100 / 10.0;//50%
+            double increasedByY = (Math.abs(vx) + Math.abs(vy)) * percentage / 100;
+            double increaseByX = (Math.abs(vx) + Math.abs(vy)) - increasedByY;
+
+
+            vx = increaseByX * whereXGo;
+            vy = increasedByY * whereYGo;
+        }
+    }
+
     int nTurns = NTURNS;
 
-    /**
-     * add walls to game
-     * @param vy - vertical speed
-     * @return - to object
-     */
     private double addTopBottomWalls(double vy) {
         if (ball.getY() < 0) {
             //if ((ball.getY() < 0) || (ball.getY() > getHeight() - BALL_DIAMETER)) {//uncomment this to make ball jump from bottom.
@@ -413,11 +431,7 @@ public class Breakout extends WindowProgram {
         return vy;
     }
 
-    /**
-     * globally defined show message
-     * @param s - string which message consist of
-     * @return - object of label message
-     */
+
     private GObject showMessage(String s) {
         GLabel messageGame = new GLabel(s, 0, 0);
         messageGame.setFont("serif 25");
@@ -481,10 +495,75 @@ public class Breakout extends WindowProgram {
         dxMouse = 0;
     }
 
+    private void createglabelfordebug() {
+        if (text == null) {
+            text = new GLabel("text", 10, 10);
+            //text.setLabel("vx:" + vx + " vy" + vy);
+            add(text);
+        }
+
+        //from 10 to 0
+        //where 0 it's 1
+        //if the ball is bouncing from wall more than 10, this vx or vy don't needed
+        //cos x from 0 to 1.57 (PI/2)
+        //calculate traektory
+        //for example we have ball where placed x = 5
+        //and y = 0,
+        //we expect that ball will move to
+        //when delta = 10 then
+        // if deltaX and deltaY = 1, then vx*=-1 and vy*=-1
+
+        /*
+        LOGIC:
+        vx = 1.5
+        vy = 3
+        vx + vy = 4.5
+        10 part of it 10*4.5/10 = 4.5
+        example
+        we have 1.5 and 3.0
+        if increase 1.5 by 20% it will be 1.7
+        if all summ 1.5 + 3.0 = 4.5
+        another will be 4.5 - 1.7
+        then
+        20% in example for me 10 that is 100% and 4.5 that is 100% too
+        4.5 - 100%
+        10  - 100%  -> 100/10 = 10
+        1.5 that is 33% of 4.5
+        and 5 that is (5 * 100/10) = 50%
+        we need to inrease by 50% = 4.5 - 100%
+                                     x  - 50%
+           x= 4.5*50/100=2.25
+
+         */
+        double deltaX, deltaY;
+        GObject collidingObject = paddle;
+
+        //left down - > ok
+        deltaX = collidingObject.getX() + collidingObject.getWidth() - ball.getX();
+        deltaY = collidingObject.getY() - ball.getY() - BALL_DIAMETER;
+
+        //left up
+        //deltaX = collidingObject.getX() + collidingObject.getWidth() / 2.0 - ball.getX() + BALL_RADIUS + BALL_DIAMETER;
+        //deltaY = ball.getY()-BALL_DIAMETER-paddle.getY()+paddle.getHeight();
+//        //rght up
+//        deltaX = collidingObject.getX() - ball.getX()-BALL_DIAMETER;
+//        deltaY = ball.getY()-BALL_DIAMETER-paddle.getY()+paddle.getHeight();
+//        //right down - > ok
+        //deltaX = collidingObject.getX() - ball.getX()-BALL_DIAMETER;
+        //deltaY = collidingObject.getY()-ball.getY()-BALL_DIAMETER;
+
+        double percentage = deltaX * 100 / 10.0;//50%
+        double increasedByX = (Math.abs(vx) + Math.abs(vy)) * percentage / 100;
+        double increaseByY = (Math.abs(vx) + Math.abs(vy)) - increasedByX;
+        String first = String.format("%.2f", deltaX);
+        String second = String.format("%.2f", deltaY);
+        String v3 = String.format("%.2f", increasedByX);
+        String v4 = String.format("%.2f", increaseByY);
+        text.setLabel("deltaX:" + first + " deltaY" + second + " increasedByX" + increasedByX + " increaseByY" + increaseByY);
+    }
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
-
         //it will not work if i just crete override method
         //i need this object to be an a global
         //we need to move it in the middle so - half part of it
@@ -492,16 +571,20 @@ public class Breakout extends WindowProgram {
         //paddle goes outside of screen
         //to prevent it try to write something like exeption
         dxMouse = prevMouseX - mouseEvent.getX();
+        //System.out.println(dxMouse);
         double paddleLocation = mouseEvent.getX() - PADDLE_WIDTH / 2.0;
 
         paddleLocation = paddleLocation < 0 ? 0 : paddleLocation;//left side block
         paddleLocation = paddleLocation > getWidth() - PADDLE_WIDTH ? getWidth() - PADDLE_WIDTH : paddleLocation;//right side block
         paddle.setLocation(paddleLocation, paddle.getY());
 
-       prevMouseX = mouseEvent.getX();
-
-
-
+        //double deltaX = paddle.getX() + paddle.getWidth() - ball.getX() - BALL_DIAMETER;
+        //ball.setLocation(paddleLocation + PADDLE_WIDTH, paddle.getY() + paddle.getHeight()); //left up
+        //ball.setLocation(paddleLocation -BALL_DIAMETER, paddle.getY()+paddle.getHeight());//right up
+        //ball.setLocation(paddleLocation -BALL_DIAMETER, paddle.getY()+paddle.getHeight()-(paddle.getHeight()+BALL_DIAMETER));//right down
+        //ball.setLocation(paddleLocation+paddle.getWidth(), paddle.getY()+paddle.getHeight()-(paddle.getHeight()+BALL_DIAMETER));//left down
+        prevMouseX = mouseEvent.getX();
+        //super.mouseMoved(mouseEvent);
     }
 
     /**
@@ -509,8 +592,8 @@ public class Breakout extends WindowProgram {
      * where is offset?
      * oh here is offset - PADDLE_Y_OFFSET
      *
-     * @param paddleWidth  -  width of the paddle
-     * @param paddleHeight - height of paddle
+     * @param paddleWidth  -  wtih of the paddle
+     * @param paddleHeight - heighth of paddle
      * @return paddle
      */
     private GRect drawRaket(int paddleWidth, int paddleHeight) {
