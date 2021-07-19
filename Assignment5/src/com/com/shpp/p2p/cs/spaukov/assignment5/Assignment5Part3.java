@@ -10,12 +10,18 @@ public class Assignment5Part3 extends TextProgram {
     private static final String ROAD_FILE = "sources/en-dictionary.txt";
     private static final boolean LIMIT_NUMBER=true;
 
+    /**
+     * the operation is rather slow, so it is good if it is performed only once.
+     */
     public void run() {
         while (true) {
             String word = readLine("Enter tre letters: ");
             ArrayList<String> dictionary = readToString();
             word = word.toLowerCase();
             char[] currentWord = word.toCharArray();
+            if (word.length()>3){
+                System.out.println("Length more than 3");
+            }
             String newWord = findWord(currentWord, dictionary);
             System.out.println(newWord);
         }
@@ -32,9 +38,19 @@ public class Assignment5Part3 extends TextProgram {
         return wordNumber;
     }
 
+    /**
+     * In this task, you need to write a program
+     * that will ask the user for a string of three letters,
+     * and then display the words that can be composed of these letters.
+     * The program should be looped, at each iteration to ask the user to
+     * enter 3 new letters and to process them (thus letters can be any case).
+     * @param currentWord - this word
+     * @param wordDictionary - dictionary from course
+     */
     private void compareCharsArray(char[] currentWord, char[] wordDictionary) {
         int foundNextIndex0 = 0;
         boolean notFound = false;
+        //this is neded for change length (for default is 3)
         int length = LIMIT_NUMBER?3:currentWord.length;
         for (int i = 0; i < length; i++) {
             foundNextIndex0 = findNextLetter(currentWord[i], eatCharFrom(foundNextIndex0, wordDictionary));
@@ -50,6 +66,12 @@ public class Assignment5Part3 extends TextProgram {
 
     }
 
+    /**
+     * eat Chars before
+     * @param iWhereCharEats charArray where chars to eat
+     * @param inWhichWordCharEats - where is chars eat
+     * @return string ready
+     */
     private char[] eatCharFrom(int iWhereCharEats, char[] inWhichWordCharEats) {
         char[] chars = new char[inWhichWordCharEats.length];
         if (inWhichWordCharEats.length - iWhereCharEats >= 0)
@@ -66,6 +88,11 @@ public class Assignment5Part3 extends TextProgram {
         return -1;
     }
 
+    /**
+     *method read all lines from a file to stream and populates lazily as the stream is consumed.
+     * Bytes from the file are decoded into characters using the specified charset.
+     * @return ArrayList of Strings
+     */
     private ArrayList<String> readToString() {
         ArrayList<String> lines = new ArrayList<>();
         try {

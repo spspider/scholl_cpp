@@ -28,36 +28,47 @@ public class Assignment5Part1 extends TextProgram {
 
     public static int countSyllables(String word) {
         word = word.toLowerCase();
-        char[] syllables = {'a', 'e', 'i', 'o', 'u', 'y'};
+        char[] syllabl = {'e', 'a', 'o', 'y', 'u', 'i'};
         char[] currentWord = word.toCharArray();
         int numThisWords;
-        boolean lastIsSyllable = false;
-        numThisWords = goToFindSomeWords(syllables, currentWord, lastIsSyllable);
-
-        if ((word.length() > 2 && word.endsWith("e")) || word.endsWith("ee") || word.endsWith("le"))
+        numThisWords = goToFindSomeWords(syllabl, currentWord);
+        if ((word.length() > 2 && word.endsWith("e")) || word.endsWith("ee") || word.endsWith("le")) {
             numThisWords--;
+        }
         return numThisWords;
     }
 
-    private static int goToFindSomeWords(char[] syllables, char[] currentWord, boolean lastIsSyl) {
+    /**
+     * In English it is quite difficult to determine the number of
+     * syllabl in a word by ear. For example, in the word are only one syllable,
+     * and in almost consonant area - 3.Therefore, we do not ask you to count the specific number of syllabl,
+     * instead approximate the number of syllabl using the following analysis -
+     * count the number of vowels in the word (including y),
+     *
+     * @param syllabl     - count of syllabl
+     * @param currentWord - take this word
+     * @return - numbers of this
+     */
+    private static int goToFindSomeWords(char[] syllabl, char[] currentWord) {
+        boolean lastSyllable=false;
         int numThisWords = 0;
-        for (char wc : currentWord) {//for each letter in word
+        for (char wordCombination : currentWord) {//for each letter in word
             boolean found = false; //if we dound him
-            for (char v : syllables) {
-                if ((v == wc) && lastIsSyl) {
+            for (char currentLetter : syllabl) {
+                if ((currentLetter == wordCombination) && lastSyllable) {
                     found = true;
-                    lastIsSyl = true;//so next word should ignore
+                    lastSyllable = true;//so next word should ignore
                     break;
-                } else if (v == wc) {
-                    numThisWords++;
+                } else if (currentLetter == wordCombination) {
+                    numThisWords++; //add 1 value
                     found = true;
-                    lastIsSyl = true;
+                    lastSyllable = true; //next value should ignore
                     break;
                 }
             }
 
             if (!found)
-                lastIsSyl = false;
+                lastSyllable = false;
         }
         return numThisWords;
     }
