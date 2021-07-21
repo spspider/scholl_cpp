@@ -1,0 +1,23 @@
+ ,"",a,::
+an, , '',a
+solipsism,"","hello","goodbye"
+"hello",goodbye,hello,"goodbye"
+"hello","""tricky tricky",tricky,tricky
+"tricky,tricky",tricky,tricky,"goodbye"
+tricky,"tricky,tricky",tricky,"tricky,tricky,tricky,tricky"
+man,plan,Dish,Origin
+Ful Medammas,Middle East,Vindaloo,"India, Portugal"
+Maafe,West Africa,Soondubu,Korea
+Kuku,"Iran, Azerbaijan",Shakshuka,North Africa
+Vindaloo,"India, Portugal","""Something inside brackets""",Another element
+"Maafe",West Africa  ,"brackets in ""the"" side",2020
+Soondubu,Korea," shppExam","one"" bracket"
+Kuku,"Iran, Azerbaijan","Java, cool","two brackets"
+Shakshuka,North? Africa,1010,",,,,"
+Dish,"I""nd""ia",,"Papa,""Mama"" and me"
+Dish,Origin,space before,"some, coma and text"
+Ful Medammas,Middle East," big bank","10""01"
+Ford,E350,"ac, abs, moon",3000.00
+Chevy,"Venture «Extended Edition»","",4900.00
+Jeep,Grand Cherokee,"MUST SELL! air, moon roof, loaded",4799.00
+"Djon ""Black Head"", Klod",Rock,"",miami beach,,
