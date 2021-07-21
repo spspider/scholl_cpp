@@ -32,9 +32,10 @@ public class Assignment5Part1 extends TextProgram {
         char[] currentWord = word.toCharArray();
         int numThisWords;
         numThisWords = goToFindSomeWords(syllabl, currentWord);
-        if ((word.length() > 2 && word.endsWith("e")) || word.endsWith("ee") || word.endsWith("le")) {
+        if ((word.length() > 3 && word.endsWith("e"))&&!word.endsWith("ee")  || word.endsWith("le")) {
             numThisWords--;
         }
+        numThisWords=numThisWords<=0?1:numThisWords;
         return numThisWords;
     }
 

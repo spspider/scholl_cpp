@@ -4,27 +4,34 @@ import com.shpp.cs.a.console.TextProgram;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Assignment5Part3 extends TextProgram {
 
     private static final String ROAD_FILE = "sources/en-dictionary.txt";
-    private static final boolean LIMIT_NUMBER = true;
+    private static final boolean LIMIT_NUMBER = false;
 
     /**
      * the operation is rather slow, so it is good if it is performed only once.
      */
     public void run() {
+        //compareCharsArray("aaz".toCharArray(), "saadfas".toCharArray());
         while (true) {
             String word = readLine("Enter tre letters: ");
             ArrayList<String> dictionary = readToString();
             word = word.toLowerCase();
             char[] currentWord = word.toCharArray();
-            if (word.length() > 3) {
+            if ((LIMIT_NUMBER)&&(word.length() > 3)) {
                 System.out.println("Length more than 3");
+                continue;
             }
             String newWord = findWord(currentWord, dictionary);
             System.out.println(newWord);
+
+
+
         }
+
     }
 
     private String findWord(char[] currentWord, ArrayList<String> dictionary) {
@@ -52,25 +59,26 @@ public class Assignment5Part3 extends TextProgram {
         int[] foundNextIndex0 = new int[currentWord.length];
         boolean notFound = false;
         //this is neded for change length (for default is 3)
-        int length = LIMIT_NUMBER ? 3 : currentWord.length;
-        //for (int i = 0; i < length; i++) {
-            foundNextIndex0[0] = findNextLetter(currentWord[0], eatCharFrom(foundNextIndex0[0], wordDictionary));
-            foundNextIndex0[1] = findNextLetter(currentWord[1], eatCharFrom(foundNextIndex0[1], wordDictionary));
-            foundNextIndex0[2] = findNextLetter(currentWord[2], eatCharFrom(foundNextIndex0[2], wordDictionary));
 
-            if ((foundNextIndex0[0]!=-1)&&(foundNextIndex0[1]!=-1)&&(foundNextIndex0[2]!=-1)){
-                if (foundNextIndex0[0] < foundNextIndex0[1]
-                        && foundNextIndex0[0] < foundNextIndex0[2]
-                        && foundNextIndex0[1] < foundNextIndex0[2]) {
-                    notFound=true;
+            int length = currentWord.length;
+            char[] wordDictionaryThis = wordDictionary;
+            for (int i = 0; i < length; i++) {
+                foundNextIndex0[i] = findNextLetter(currentWord[i],  wordDictionaryThis);
+                StringBuilder wordDict = new StringBuilder();
+                wordDictionaryThis = wordDict.append(wordDictionaryThis).substring(foundNextIndex0[i] + 1).toCharArray();
+                if (foundNextIndex0[i] == -1) {
+                    notFound = true;
+                    break;
                 }
-
             }
 
-        //}
+
+
+
         if (!notFound) {
             System.out.println(wordDictionary);
         }
+
 
     }
 
@@ -85,6 +93,11 @@ public class Assignment5Part3 extends TextProgram {
         char[] chars = new char[inWhichWordCharEats.length];
         if (inWhichWordCharEats.length - iWhereCharEats >= 0)
             System.arraycopy(inWhichWordCharEats, iWhereCharEats, chars, iWhereCharEats, inWhichWordCharEats.length - iWhereCharEats);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(inWhichWordCharEats);
+        chars = stringBuilder.toString().substring(iWhereCharEats).toCharArray();
+        //System.out.println(chars);
+
         return chars;
     }
 
