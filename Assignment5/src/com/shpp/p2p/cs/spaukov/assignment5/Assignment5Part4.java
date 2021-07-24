@@ -28,9 +28,14 @@ public class Assignment5Part4 extends TextProgram {
 
     public void run() {
         String filename = "sources/csv.csv";
+
         int columnIndex = 0;
-        String column = extractColumn(filename, columnIndex).toString();
-        System.out.println(column);
+        ArrayList<String> column = extractColumn(filename, columnIndex);
+        if (column==null){
+            System.out.println("File not found, null returned");
+        }else {
+            System.out.println(column);
+        }
     }
 
     /**
@@ -42,6 +47,10 @@ public class Assignment5Part4 extends TextProgram {
      */
     private ArrayList<String> extractColumn(String filename, int columnIndex) {
         ArrayList<String> returnString = new ArrayList<>();
+        if (readToString(filename)==null){
+
+            return null;
+        }
         ArrayList<String> readToString = readToString(filename);
         for (String s : readToString) {
             try {
@@ -146,7 +155,7 @@ public class Assignment5Part4 extends TextProgram {
 
             br.close();
         } catch (IOException e) {
-            println("Error." + e);
+            return null;
         }
         return lines;
     }

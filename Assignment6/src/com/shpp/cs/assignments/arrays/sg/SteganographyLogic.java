@@ -71,6 +71,10 @@ public class SteganographyLogic {
                     if (red % 2 == 0) {
                         red++;
                     }
+                }else{
+                    if (red % 2 != 0) {
+                        red--;
+                    }
                 }
                 imageInt[row][col] = GImage.createRGBPixel(red,green, blue);
 

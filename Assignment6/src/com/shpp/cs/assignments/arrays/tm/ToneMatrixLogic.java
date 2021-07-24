@@ -13,61 +13,62 @@ public class ToneMatrixLogic {
     public static double[] matrixToMusic(boolean[][] toneMatrix, int column, double[][] samples) {
         double[] result = new double[ToneMatrixConstants.sampleSize()];
 
-        double[][]currentResultSound = getResultSoundArray(toneMatrix, column, samples, result);
-        double[]sumarrySound = getSumarrizedSound(currentResultSound);
-        result = getNormalizedSound(sumarrySound);
+        double[][]matrixArraySound = takeMatrixArraySound(toneMatrix, column, samples, result);
+        double[]sum = getSum(matrixArraySound);
+        result = getNormalWave(sum);
         return result;
     }
 
-    private static double[][] getResultSoundArray(boolean[][] toneMatrix, int column,
-                                                  double[][] samples, double[] result) {
-        int matrixRows = toneMatrix.length;
-        double[][]currentResultSound = new double[matrixRows][result.length];
+    private static double[][] takeMatrixArraySound(boolean[][] toneMatrix, int column,
+                                                   double[][] samples, double[] result) {
+        int allRows = toneMatrix.length;
+        double[][]resultMatrix = new double[allRows][result.length];
 
-        for (int row = 0; row < matrixRows; row++){
-            boolean markedMatrixCell = toneMatrix[row][column];
-            if(markedMatrixCell){
-                double [] note = samples[row];
-                currentResultSound[row] = note;
+        for (int row = 0; row < allRows; row++){
+            boolean isItMatrixMarked = toneMatrix[row][column];
+            if(isItMatrixMarked){
+                double [] whichMatrixMarked = samples[row];
+                resultMatrix[row] = whichMatrixMarked;
             }
         }
-        return currentResultSound;
+        return resultMatrix;
     }
 
-    private static double[] getSumarrizedSound(double[][] currentResultSound) {
+    private static double[] getSum(double[][] currentResultSound) {
         int rows = currentResultSound.length;
         int columns = currentResultSound[0].length;
-        double[] result = new double[columns];
+        double[] resultSound = new double[columns];
         for (int col = 0; col < columns; col++) {
-            double sum = 0;
+            double summarize = 0;
             for (int row = 0; row < rows; row++) {
-                sum += currentResultSound[row][col];
+                summarize += currentResultSound[row][col];
             }
-            result[col] = sum;
+            resultSound[col] = summarize;
         }
-        return result;
+        return resultSound;
     }
 
-    private static double[] getNormalizedSound(double[] resultSound) {
-        double max = getAbsMaximum(resultSound);
+    private static double[] getNormalWave(double[] resultSound) {
+        double maximum = getAbsMaximum(resultSound);
         for(int i = 0; i < resultSound.length; i++){
-            if(max > 0) {
-                resultSound[i] = resultSound[i] / max;
+            if (maximum!=0) {
+                resultSound[i] = resultSound[i] / maximum;
             }else{
-                resultSound[i] = 0;
+                return resultSound;
             }
         }
         return resultSound;
     }
 
     private static double getAbsMaximum(double[] array) {
-        int cells = array.length;
-        double max = array [0];
-        for (int i = 1; i < cells; i++){
-            if(Math.abs(max) < Math.abs(array[i])){
-                max = array[i];
+        int arrayLength = array.length;
+        double maximum = array [0];
+        for (int i = 1; i < arrayLength; i++){
+            if(Math.abs(maximum) < Math.abs(array[i])){
+                maximum = array[i];
             }
         }
-        return Math.abs(max);
+        //return Math.abs(maximum);
+        return maximum;
     }
 }
