@@ -15,7 +15,6 @@ import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.shpp.cs.assignments.arrays.hg.teest.*;
 import com.shpp.p2p.cs.spaukov.assignment6.hg.teest.ResultTypeHolder;
 import com.shpp.p2p.cs.spaukov.assignment6.hg.teest.TeestResult;
 

@@ -13,11 +13,22 @@ public class HistogramEqualizationLogic {
      * @return A histogram of those luminances.
      */
     public static int[] histogramFor(int[][] luminances) {
+        /*they want us to return histogram of luminances
+        * This image is a set of pixels of the same brightness.
+        * An image histogram is a distribution of brightness across an image.
+        *  More precisely, it is an array of 256 integer numbers,
+        * one for each possible degree of brightness,
+        * where each element of the array is the number of pixels that have the corresponding brightness.
+        * For example, the zero element of the array is the number of pixels with a brightness of 0,
+        * the first - with a brightness of 1, etc. Looking at the histogram, you can say a
+        * lot about the brightness distribution in the image. For example, here is the original
+        * picture of the landscape in the form of a histogram.
+        * */
         int[] result = new int[MAX_LUMINANCE + 1];
         for (int row = 0; row < luminances.length; ++row)
             for (int col = 0; col < luminances[row].length; col++) {
-                int lumi=luminances[row][col];
-                result[lumi]++;
+                //create some result source
+                     result[luminances[row][col]]++;//add linu source to result
             }
         return result;
     }
@@ -33,13 +44,14 @@ public class HistogramEqualizationLogic {
      * @return The cumulative frequency array.
      */
     public static int[] cumulativeSumFor(int[] histogram) {
-        int histogrPlusPlus = 0;
+        int histogrPlusPlus = 0;//create variable for change inside loop
         int[] cumulativeFreqArray = new int[histogram.length];
-        for (int i = 0; i < histogram.length; ++i) {
-            histogrPlusPlus += histogram[i];
+        /*create cycle for hystogram*/
+        for (int i = 0; i < histogram.length; ++i) {//we start from 0 to his length
+            histogrPlusPlus += histogram[i];//add this histogram
             cumulativeFreqArray[i] = histogrPlusPlus;
         }
-        return cumulativeFreqArray;
+        return cumulativeFreqArray;//return array of histogram
     }
 
     /**
@@ -51,8 +63,8 @@ public class HistogramEqualizationLogic {
     public static int totalPixelsIn(int[][] luminances) {
 
 
-        /* TODO: Implement this method! */
-        return luminances[0].length * luminances.length;
+
+        return luminances[0].length * luminances.length;//just multiply heigth to width
     }
 
     /**
@@ -66,15 +78,32 @@ public class HistogramEqualizationLogic {
      * @return The luminances of the image formed by applying histogram equalization.
      */
     public static int[][] equalize(int[][] luminances) {
+        /*
+        so i need to find histogram
+        and i have just only test cases,
+        looking throw it i found what i need to do,
+                if (this.confirmResult(result, pixels)) {
+            for (int row = 0; row < result.length; ++row) {
+                for (int col = 0; col < result[row].length; ++col) {
+                    int intensity = result[row][col];
+                    result[row][col] = GImage.createRGBPixel(intensity, intensity, intensity);
+                }
+            }
+            this is the codem which drawing image after my correction,
+            nothing special, so i must to go throw histogram visualization to better understand what i should do
+        * */
         int[][] lumiOfImage = new int[luminances.length][luminances[0].length];
         int[] cumulativeSum_ = cumulativeSumFor(histogramFor(luminances));
+        //create two for and make him work in [][] selection
         for (int row = 0; row < luminances.length; ++row) {
+            //for the each colomn
             for (int col = 0; col < luminances[0].length; col++) {
+                /*this taken from our course*/
                 lumiOfImage[row][col] = MAX_LUMINANCE * cumulativeSum_[luminances[row][col]]
-                        / totalPixelsIn(luminances);
+                        / totalPixelsIn(luminances);// normally if we have for example 100*summ(500)/10231(pixels)
             }
         }
-        return lumiOfImage;
+        return lumiOfImage;//return luminicence of the image
     }
 }
 

@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
-import com.shpp.cs.assignments.arrays.hg.teest.*;
 import com.shpp.p2p.cs.spaukov.assignment6.hg.teest.TeestCase;
 import com.shpp.p2p.cs.spaukov.assignment6.hg.teest.TeestResult;
 import com.shpp.p2p.cs.spaukov.assignment6.hg.teest.TeestSuite;

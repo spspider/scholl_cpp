@@ -46,18 +46,20 @@ public class ToneMatrixLogic {
         for (int col = 0; col < columns; col++) {
             double summarize = 0;
             for (int row = 0; row < rows; row++) {
+                //add summirize to previous declaration
                 summarize += currentResultSound[row][col];
             }
             resultSound[col] = summarize;
         }
-        return resultSound;
+        return resultSound;//result sound wave in summ
     }
 
     private static double[] getNormalWave(double[] resultSound) {
-        double maximum = getAbsMaximum(resultSound);
+        /*lets impleement summurize*/
+        double maximum = getAbsMaximum(resultSound);//take maximum from another method
         for(int i = 0; i < resultSound.length; i++){
-            if (maximum!=0) {
-                resultSound[i] = resultSound[i] / maximum;
+            if (maximum!=0) {//OMG! if it zero - i have BOOM! because impossible divide to zero
+                resultSound[i] = resultSound[i] / maximum;//divide to this maximum
             }else{
                 return resultSound;
             }
@@ -66,14 +68,13 @@ public class ToneMatrixLogic {
     }
 
     private static double getAbsMaximum(double[] array) {
-        int arrayLength = array.length;
         double maximum = array [0];
-        for (int i = 1; i < arrayLength; i++){
+        for (int i = 1; i <  array.length; i++){
             if(Math.abs(maximum) < Math.abs(array[i])){
                 maximum = array[i];
             }
         }
-        //return Math.abs(maximum);
+        //firstly it return in module, then wanwamx sad that is an mistake in this method, and i return any of number, even with -
         return maximum;
     }
 }

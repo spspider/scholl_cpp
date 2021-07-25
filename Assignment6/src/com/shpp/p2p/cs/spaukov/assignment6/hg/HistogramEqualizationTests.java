@@ -1,7 +1,7 @@
 package com.shpp.p2p.cs.spaukov.assignment6.hg;
 
 import com.shpp.cs.a.simple.SimpleProgram;
-import com.shpp.cs.assignments.arrays.hg.teest.*;
+
 import com.shpp.p2p.cs.spaukov.assignment6.hg.teest.TeestCase;
 import com.shpp.p2p.cs.spaukov.assignment6.hg.teest.TeestRunnerPanel;
 import com.shpp.p2p.cs.spaukov.assignment6.hg.teest.TeestSuite;

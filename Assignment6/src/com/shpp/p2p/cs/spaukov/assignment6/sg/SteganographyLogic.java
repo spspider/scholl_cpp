@@ -27,12 +27,8 @@ public class SteganographyLogic {
                 /* Extract the green and blue components and write them back, leaving the
                  * red component out.
                  */
-                int green = GImage.getGreen(pixels[row][col]);
-                int blue = GImage.getBlue(pixels[row][col]);
                 int red = GImage.getRed(pixels[row][col]);
-                pixelsForReturn[row][col] = red % 2 != 0;
-                //                                       R    G    B
-                //pixels[row][col] = GImage.createRGBPixel(0, green, blue);
+                pixelsForReturn[row][col] = red % 2 != 0;//this return pixel with message
             }
         }
 
@@ -64,18 +60,23 @@ public class SteganographyLogic {
         int[][] imageInt = new int[pixels.length][pixels[0].length];
         for (int row = 0; row < pixels.length; row++) {
             for (int col = 0; col < pixels[row].length; col++) {
+                /*divide RGB into components*/
                 int green = GImage.getGreen(pixels[row][col]);
                 int blue = GImage.getBlue(pixels[row][col]);
                 int red = GImage.getRed(pixels[row][col]);
+                /*if the pixel is marked*/
                 if (message[row][col]) {
                     if (red % 2 == 0) {
+                        /*add one(to mask it)*/
                         red++;
                     }
                 }else{
                     if (red % 2 != 0) {
+                        /*delete one pixel*/
                         red--;
                     }
                 }
+                /*create another GImage and draw picture*/
                 imageInt[row][col] = GImage.createRGBPixel(red,green, blue);
 
             }

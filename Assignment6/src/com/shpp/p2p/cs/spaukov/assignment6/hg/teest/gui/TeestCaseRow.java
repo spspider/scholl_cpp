@@ -5,7 +5,6 @@ import acm.gui.TablePanel;
 import java.awt.Dimension;
 import javax.swing.JTextArea;
 
-import com.shpp.cs.assignments.arrays.hg.teest.*;
 import com.shpp.p2p.cs.spaukov.assignment6.hg.teest.TeestCase;
 import com.shpp.p2p.cs.spaukov.assignment6.hg.teest.TeestResult;
 
